@@ -26,7 +26,7 @@ export const RecipeSummary: React.FC<IRecipeSummaryProps> = ({ recipe }) => {
     <Box clone my={1}>
       <Card>
         <CardHeader
-          avatar={<Avatar aria-label="recipe">R</Avatar>}
+          avatar={<Avatar aria-label="recipe">{recipe.name.charAt(0)}</Avatar>}
           action={
             <IconButton aria-label="settings">
               <MoreVert />
@@ -35,11 +35,20 @@ export const RecipeSummary: React.FC<IRecipeSummaryProps> = ({ recipe }) => {
           title={recipe.name}
           subheader={format(new Date(recipe._createdOn), "PPP")}
         />
-        {/* <CardMedia image="/static/images/cards/paella.jpg" title="Paella dish" /> */}
+        <Box clone height={150}>
+          <CardMedia
+            image="https://media3.s-nbcnews.com/j/newscms/2019_41/3044956/191009-cooking-vegetables-al-1422_ae181a762406ae9dce02dd0d5453d1ba.fit-2000w.jpg"
+            title={recipe.name}
+          />
+        </Box>
         <CardContent>
-          {recipe.tags.map(tag => (
-            <Chip key={tag} label={tag} />
-          ))}
+          <Box mb="0.5rem">
+            {recipe.tags.map(tag => (
+              <Box key={tag} clone mr="0.5rem">
+                <Chip label={tag} />
+              </Box>
+            ))}
+          </Box>
           <Typography variant="body2" color="textSecondary" component="p">
             {recipe.description}
           </Typography>
