@@ -15,18 +15,18 @@ import { Add, Close } from "@material-ui/icons";
 import parse from "autosuggest-highlight/parse";
 import match from "autosuggest-highlight/match";
 
-interface IAddRecipeProps {
-  readonly open: boolean;
+interface IEditRecipeProps {
+  readonly recipe: IRecipe;
   readonly tags: Array<string>;
   readonly handleClose: () => void;
-  readonly handleAddRecipe: (recipe: IRecipe) => void;
+  readonly handleEditRecipe: (recipe: IRecipe) => void;
 }
 
-export const AddRecipe: React.FC<IAddRecipeProps> = ({
-  open,
+export const EditRecipe: React.FC<IEditRecipeProps> = ({
+  recipe,
   tags,
   handleClose,
-  handleAddRecipe
+  handleEditRecipe
 }) => {
   const validate = React.useCallback(values => {
     const errors: Partial<{ -readonly [key in keyof IRecipe]: string }> = {};
@@ -37,11 +37,11 @@ export const AddRecipe: React.FC<IAddRecipeProps> = ({
   }, []);
   const onSubmit = React.useCallback(
     (values, { setSubmitting }) => {
-      handleAddRecipe(values);
+      handleEditRecipe(values);
       setSubmitting(false);
       handleClose();
     },
-    [handleAddRecipe, handleClose]
+    [handleEditRecipe, handleClose]
   );
   const preventDefaultOnEnter = React.useCallback(
     (event: React.KeyboardEvent) => {
@@ -54,15 +54,11 @@ export const AddRecipe: React.FC<IAddRecipeProps> = ({
 
   return (
     <Dialog
-      open={open}
+      open={!!recipe}
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <Formik
-        initialValues={{ name: "", description: "", tags: [] }}
-        validate={validate}
-        onSubmit={onSubmit}
-      >
+      <Formik initialValues={recipe} validate={validate} onSubmit={onSubmit}>
         {({
           values,
           errors,
@@ -72,7 +68,7 @@ export const AddRecipe: React.FC<IAddRecipeProps> = ({
           isSubmitting
         }) => (
           <form onSubmit={handleSubmit}>
-            <DialogTitle id="form-dialog-title">Add Recipe</DialogTitle>
+            <DialogTitle id="form-dialog-title">Edit Recipe</DialogTitle>
             <DialogContent>
               <TextField
                 type="text"
@@ -171,7 +167,7 @@ export const AddRecipe: React.FC<IAddRecipeProps> = ({
                 size="large"
                 endIcon={<Add />}
               >
-                Add recipe
+                Save recipe
               </Button>
             </DialogActions>
           </form>
