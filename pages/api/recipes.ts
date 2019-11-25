@@ -73,7 +73,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(500).send("Cannot reach JSONBox API");
       });
   } else if (req.method === "GET") {
-    fetch("https://jsonbox.io/box_158f2a9b9a11831a724c/recipes")
+    return getRecipes()
       .then(jsonStoreRes => {
         jsonStoreRes
           .json()
@@ -94,3 +94,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(404).send("Not found");
   }
 };
+
+export function getRecipes() {
+  return fetch("https://jsonbox.io/box_158f2a9b9a11831a724c/recipes");
+}

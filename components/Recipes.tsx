@@ -18,9 +18,8 @@ export const Recipes: React.FC<IRecipesProps> = ({
   return (
     <React.Fragment>
       {recipes.map(recipe => (
-        <Grid item xs={12} sm={6} lg={4}>
+        <Grid key={recipe.name} item xs={12} sm={6} lg={4}>
           <RecipeSummary
-            key={recipe.name}
             recipe={recipe}
             setEditingRecipe={setEditingRecipe}
             setDeletingRecipe={setDeletingRecipe}

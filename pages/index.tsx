@@ -11,6 +11,7 @@ import { Recipes } from "../components/Recipes";
 import { AppBar } from "../components/AppBar";
 import { EditRecipe } from "../components/EditRecipe";
 import { DeleteRecipe } from "../components/DeleteRecipe";
+import { getRecipes } from "./api/recipes";
 
 const Home = pageData => {
   const [{ recipes, error }, setPageData] = React.useState(pageData);
@@ -57,7 +58,9 @@ const Home = pageData => {
   }, [setDeletingRecipe]);
 
   const refreshData = React.useCallback(() => {
-    Home.getInitialProps().then(newPageData => setPageData(newPageData));
+    Home.getInitialProps({} as any).then(newPageData =>
+      setPageData(newPageData)
+    );
   }, []);
 
   const handleAddRecipe = React.useCallback(
@@ -157,8 +160,14 @@ const Home = pageData => {
   );
 };
 
-Home.getInitialProps = async () => {
-  const res = await fetch("http://localhost:3000/api/recipes");
+Home.getInitialProps = async ({ req }) => {
+  // This is the server
+  if (req) {
+    const json = await getRecipes().then(body => body.json());
+    return { recipes: json };
+  }
+
+  const res = await fetch("/api/recipes");
   if (res.status !== 200) {
     return { error: res.statusText };
   }
