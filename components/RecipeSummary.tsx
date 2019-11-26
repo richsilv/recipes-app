@@ -13,9 +13,30 @@ import {
   Box,
   Chip,
   Menu,
-  MenuItem
+  MenuItem,
+  makeStyles,
+  Theme,
+  createStyles,
+  useTheme
 } from "@material-ui/core";
 import { MoreVert } from "@material-ui/icons";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    menu: {
+      marginTop: theme.spacing(6)
+    },
+    media: {
+      height: "150px"
+    },
+    chip: {
+      marginRight: theme.spacing(1)
+    },
+    chips: {
+      marginBottom: theme.spacing(1)
+    }
+  })
+);
 
 interface IRecipeSummaryProps {
   readonly recipe: IRecipe;
@@ -28,6 +49,9 @@ export const RecipeSummary: React.FC<IRecipeSummaryProps> = ({
   setEditingRecipe,
   setDeletingRecipe
 }) => {
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
   const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(
     null
   );
@@ -62,34 +86,35 @@ export const RecipeSummary: React.FC<IRecipeSummaryProps> = ({
             <IconButton aria-label="settings" onClick={handleOpenMenu}>
               <MoreVert />
             </IconButton>
-            <Box clone mt={6}>
-              <Menu
-                anchorEl={anchorElement}
-                keepMounted
-                open={Boolean(anchorElement)}
-                onClose={handleCloseMenu}
-              >
-                <MenuItem onClick={handleSetEditingRecipe}>Edit</MenuItem>
-                <MenuItem onClick={handleDeleteRecipe}>Delete</MenuItem>
-              </Menu>
-            </Box>
+            <Menu
+              className={classes.menu}
+              anchorEl={anchorElement}
+              keepMounted
+              open={Boolean(anchorElement)}
+              onClose={handleCloseMenu}
+            >
+              <MenuItem onClick={handleSetEditingRecipe}>Edit</MenuItem>
+              <MenuItem onClick={handleDeleteRecipe}>Delete</MenuItem>
+            </Menu>
           </React.Fragment>
         }
         title={recipe.name}
         subheader={format(new Date(recipe._createdOn), "PPP")}
       />
-      <Box clone height={150}>
-        <CardMedia
-          image="https://media3.s-nbcnews.com/j/newscms/2019_41/3044956/191009-cooking-vegetables-al-1422_ae181a762406ae9dce02dd0d5453d1ba.fit-2000w.jpg"
-          title={recipe.name}
-        />
-      </Box>
+      <CardMedia
+        className={classes.media}
+        image="https://media3.s-nbcnews.com/j/newscms/2019_41/3044956/191009-cooking-vegetables-al-1422_ae181a762406ae9dce02dd0d5453d1ba.fit-2000w.jpg"
+        title={recipe.name}
+      />
       <CardContent>
-        <Box mb="0.5rem">
+        <Box className={classes.chips}>
           {recipe.tags.map(tag => (
-            <Box key={tag} clone mr="0.5rem">
-              <Chip label={tag} color="secondary" />
-            </Box>
+            <Chip
+              className={classes.chip}
+              key={tag}
+              label={tag}
+              color="secondary"
+            />
           ))}
         </Box>
         <Typography variant="body1">{recipe.description}</Typography>

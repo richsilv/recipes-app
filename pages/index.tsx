@@ -2,7 +2,15 @@ import React from "react";
 import fetch from "isomorphic-unfetch";
 
 import { Page } from "../components/Page";
-import { Fab, Box, Grid } from "@material-ui/core";
+import {
+  Fab,
+  Box,
+  Grid,
+  makeStyles,
+  Theme,
+  createStyles,
+  useTheme
+} from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { ErrorDialog } from "../components/ErrorDialog";
 import { IRecipe } from "../types";
@@ -13,7 +21,20 @@ import { EditRecipe } from "../components/EditRecipe";
 import { DeleteRecipe } from "../components/DeleteRecipe";
 import { getRecipes } from "./api/recipes";
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    addButton: {
+      position: "fixed",
+      bottom: "2rem",
+      right: "2rem"
+    }
+  })
+);
+
 const Home = pageData => {
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
   const [{ recipes, error }, setPageData] = React.useState(pageData);
   const [isAddingRecipe, setIsAddingRecipe] = React.useState(false);
   const [editingRecipe, setEditingRecipe] = React.useState<IRecipe | null>(
@@ -141,11 +162,13 @@ const Home = pageData => {
             handleDeleteRecipe={handleDeleteRecipe}
           />
           {isAddingRecipe ? null : (
-            <Box clone position="fixed" bottom="2rem" right="2rem">
-              <Fab color="primary" onClick={handleToggleAddRecipe}>
-                <Add />
-              </Fab>
-            </Box>
+            <Fab
+              className={classes.addButton}
+              color="primary"
+              onClick={handleToggleAddRecipe}
+            >
+              <Add />
+            </Fab>
           )}
           <Grid container spacing={3}>
             <Recipes
