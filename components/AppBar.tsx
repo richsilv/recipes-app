@@ -17,6 +17,11 @@ import { fade, useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    autocomplete: {
+      width: "32rem",
+      maxWidth: "calc(100% - 3rem)",
+      color: "white"
+    },
     search: {
       position: "relative",
       borderRadius: theme.shape.borderRadius,
@@ -34,16 +39,24 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     searchIcon: {
       width: theme.spacing(7),
-      display: "flex",
+      display: "none",
       height: "100%",
       position: "absolute",
       pointerEvents: "none",
       alignItems: "center",
-      justifyContent: "center"
+      justifyContent: "center",
+      [theme.breakpoints.up("sm")]: {
+        display: "flex"
+      }
     },
     inputRoot: {
       color: "inherit",
-      paddingLeft: theme.spacing(7)
+      flexWrap: "nowrap",
+      overflowX: "scroll",
+      paddingLeft: theme.spacing(1),
+      [theme.breakpoints.up("sm")]: {
+        paddingLeft: theme.spacing(7)
+      }
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 1),
@@ -56,7 +69,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     popupIndicator: {
       color: theme.palette.common.white
-    }
+    },
+    clearIndicator: { color: theme.palette.common.white }
   })
 );
 
@@ -81,64 +95,64 @@ export const AppBar: React.FC<IAppBarProps> = ({
           <Menu />
         </IconButton>
       </Box>
-      <Box clone width="32rem" color="white">
-        <Autocomplete
-          multiple
-          value={selectedTags}
-          options={allTags}
-          classes={{
-            popupIndicator: classes.popupIndicator
-          }}
-          filterSelectedOptions
-          onChange={(_, tagsValue) => handleChangeTagSearch(tagsValue)}
-          renderTags={(value, getTagProps) =>
-            value.map((option, index) => (
-              <Chip
-                size="small"
-                color="secondary"
-                label={option}
-                {...getTagProps({ index })}
-              />
-            ))
-          }
-          renderInput={params => (
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <Search />
-              </div>
-              <InputBase
-                {...params.InputProps}
-                placeholder="Cuisine, ingredient, etc..."
-                fullWidth
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput
-                }}
-                inputProps={params.inputProps}
-              />
+      <Autocomplete
+        multiple
+        value={selectedTags}
+        options={allTags}
+        className={classes.autocomplete}
+        classes={{
+          popupIndicator: classes.popupIndicator,
+          clearIndicator: classes.clearIndicator
+        }}
+        filterSelectedOptions
+        onChange={(_, tagsValue) => handleChangeTagSearch(tagsValue)}
+        renderTags={(value, getTagProps) =>
+          value.map((option, index) => (
+            <Chip
+              size="small"
+              color="secondary"
+              label={option}
+              {...getTagProps({ index })}
+            />
+          ))
+        }
+        renderInput={params => (
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <Search />
             </div>
-          )}
-          renderOption={(option, { inputValue }) => {
-            const matches = match(option, inputValue);
-            const parts = parse(option, matches);
+            <InputBase
+              {...params.InputProps}
+              placeholder="Cuisine, ingredient, etc..."
+              fullWidth
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput
+              }}
+              inputProps={params.inputProps}
+            />
+          </div>
+        )}
+        renderOption={(option, { inputValue }) => {
+          const matches = match(option, inputValue);
+          const parts = parse(option, matches);
 
-            return (
-              <div>
-                {parts.map((part, index) => (
-                  <span
-                    key={index}
-                    style={{
-                      fontWeight: part.highlight ? 700 : 400
-                    }}
-                  >
-                    {part.text}
-                  </span>
-                ))}
-              </div>
-            );
-          }}
-        />
-      </Box>
+          return (
+            <div>
+              {parts.map((part, index) => (
+                <span
+                  key={index}
+                  style={{
+                    fontWeight: part.highlight ? 700 : 400
+                  }}
+                >
+                  {part.text}
+                </span>
+              ))}
+            </div>
+          );
+        }}
+      />
     </Toolbar>
   );
 };
