@@ -17,6 +17,9 @@ import { fade, useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    drawerIcon: {
+      marginRight: theme.spacing(2)
+    },
     autocomplete: {
       width: "32rem",
       maxWidth: "calc(100% - 3rem)",
@@ -90,11 +93,14 @@ export const AppBar: React.FC<IAppBarProps> = ({
 
   return (
     <Toolbar>
-      <Box clone mr={2}>
-        <IconButton edge="start" color="inherit" aria-label="open drawer">
-          <Menu />
-        </IconButton>
-      </Box>
+      <IconButton
+        className={classes.drawerIcon}
+        edge="start"
+        color="inherit"
+        aria-label="open drawer"
+      >
+        <Menu />
+      </IconButton>
       <Autocomplete
         multiple
         value={selectedTags}
@@ -117,10 +123,10 @@ export const AppBar: React.FC<IAppBarProps> = ({
           ))
         }
         renderInput={params => (
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
+          <Box className={classes.search}>
+            <Box className={classes.searchIcon}>
               <Search />
-            </div>
+            </Box>
             <InputBase
               {...params.InputProps}
               placeholder="Cuisine, ingredient, etc..."
@@ -131,14 +137,14 @@ export const AppBar: React.FC<IAppBarProps> = ({
               }}
               inputProps={params.inputProps}
             />
-          </div>
+          </Box>
         )}
         renderOption={(option, { inputValue }) => {
           const matches = match(option, inputValue);
           const parts = parse(option, matches);
 
           return (
-            <div>
+            <Box>
               {parts.map((part, index) => (
                 <span
                   key={index}
@@ -149,7 +155,7 @@ export const AppBar: React.FC<IAppBarProps> = ({
                   {part.text}
                 </span>
               ))}
-            </div>
+            </Box>
           );
         }}
       />
