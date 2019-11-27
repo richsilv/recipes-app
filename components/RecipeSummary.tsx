@@ -30,10 +30,11 @@ const useStyles = makeStyles((theme: Theme) =>
       height: "150px"
     },
     chip: {
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
+      marginBottom: theme.spacing(1)
     },
     chips: {
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(-1)
     }
   })
 );

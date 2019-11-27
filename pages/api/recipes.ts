@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import fetch from "isomorphic-unfetch";
 
+const jsonboxId = process.env.JSONBOX_ID;
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    fetch("https://jsonbox.io/box_158f2a9b9a11831a724c/recipes", {
+    fetch(`https://jsonbox.io/${jsonboxId}/recipes`, {
       method: "POST",
       body: JSON.stringify(req.body),
       headers: {
@@ -28,16 +30,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(500).send("Cannot reach JSONBox API");
       });
   } else if (req.method === "PATCH") {
-    fetch(
-      `https://jsonbox.io/box_158f2a9b9a11831a724c/recipes/${req.body._id}`,
-      {
-        method: "PUT",
-        body: JSON.stringify(req.body),
-        headers: {
-          "Content-Type": "application/json"
-        }
+    fetch(`https://jsonbox.io/${jsonboxId}/recipes/${req.body._id}`, {
+      method: "PUT",
+      body: JSON.stringify(req.body),
+      headers: {
+        "Content-Type": "application/json"
       }
-    )
+    })
       .then(jsonStoreRes => {
         jsonStoreRes
           .json()
@@ -56,15 +55,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(500).send("Cannot reach JSONBox API");
       });
   } else if (req.method === "DELETE") {
-    fetch(
-      `https://jsonbox.io/box_158f2a9b9a11831a724c/recipes/${req.body._id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json"
-        }
+    fetch(`https://jsonbox.io/${jsonboxId}/recipes/${req.body._id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
       }
-    )
+    })
       .then(_ => {
         res.status(204).end();
       })
@@ -96,5 +92,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export function getRecipes() {
-  return fetch("https://jsonbox.io/box_158f2a9b9a11831a724c/recipes");
+  return fetch(`https://jsonbox.io/${jsonboxId}/recipes`);
 }
