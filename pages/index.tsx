@@ -184,10 +184,10 @@ const Home = pageData => {
 };
 
 Home.getInitialProps = async ({ req }) => {
-  // This is the server
   if (req) {
+    // This is the server
     const json = await getRecipes().then(body => body.json());
-    return { recipes: json };
+    return { recipes: json || [] };
   }
 
   const res = await fetch("/api/recipes");
